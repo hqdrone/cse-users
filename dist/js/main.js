@@ -15,7 +15,7 @@ const App = {
 		}, 2000),
 		async getUsers() {
 			if (this.search.length) {
-				const {data} = await axios.get(`https://api.github.com/search/users?q=${this.search}&sort=repositories&order=${this.sort}`)
+				const {data} = await axios.get(`https://api.github.com/search/users?q=${this.search}+in:login&sort=repositories&order=${this.sort}`)
 				this.users = data.items
 			}
 			
