@@ -1,2 +1,49 @@
 tr()
 	transition .24s
+
+body
+	font-family: 'Rubik', sans-serif;
+	color: #333
+
+.container
+	max-width 960px
+	margin: 0 auto
+	padding: 0 16px
+
+.app
+	&-h1
+		font-size: 48px
+		text-align center
+	
+	&-tools
+		display flex
+		gap: 32px
+		justify-content: space-between;
+		margin-bottom: 32px
+	
+	&-users
+		display grid
+		gap: 24px
+		grid-template-columns repeat(auto-fill, minmax(280px,1fr))
+	
+	&-user
+		background: #eee
+		padding: 16px
+		border-radius: 8px
+		
+		&__head
+			display flex
+			gap: 16px
+			align-items: center
+		
+		&__avatar
+			width: 32px
+			height: 32px
+			border-radius: 50px
+			overflow hidden
+			
+			img
+				object-fit cover
+				width: 100%
+				height: 100%
+				display block

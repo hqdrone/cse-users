@@ -1,0 +1,47 @@
+body {
+  font-family: 'Rubik', sans-serif;
+  color: #333;
+}
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.app-h1 {
+  font-size: 48px;
+  text-align: center;
+}
+.app-tools {
+  display: flex;
+  gap: 32px;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.app-users {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.app-user {
+  background: #eee;
+  padding: 16px;
+  border-radius: 8px;
+}
+.app-user__head {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.app-user__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50px;
+  overflow: hidden;
+}
+.app-user__avatar img {
+  -o-object-fit: cover;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}

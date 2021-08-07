@@ -2,7 +2,7 @@
 
 const gulp = require('gulp');
 const stylus = require('gulp-stylus');
-const pug = require('gulp-pug');
+// const pug = require('gulp-pug');
 const autoprefixer = require('gulp-autoprefixer');
 const browsersync = require('browser-sync').create();
 
@@ -16,10 +16,10 @@ gulp.task('stylus', function(){
 });
 
 gulp.task('pug', function(){
-  return gulp.src('app/pug/*.pug')
-    .pipe(pug({
-      pretty: true
-    }))
+  return gulp.src('app/pug/*.html')
+    // .pipe(pug({
+      // pretty: true
+    // }))
     .pipe(gulp.dest('dist'));
 });
 
