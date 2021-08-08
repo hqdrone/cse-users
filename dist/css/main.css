@@ -46,3 +46,20 @@ body {
   height: 100%;
   display: block;
 }
+.app__nav {
+  margin-bottom: 32px;
+}
+.app-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 24px;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+}
+.app-nav ul a {
+  text-transform: uppercase;
+  color: #333;
+  font-size: 18px;
+  text-decoration: none;
+}

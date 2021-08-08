@@ -14,66 +14,18 @@
 	<div class="container">
 		<h1 class="app__h1 app-h1">CSE - Github Users</h1>
 
-<!--		Tools-->
-		<div class="app__tools app-tools">
-			<div class="app__search app-search">
-				<label>
-					Search
-					<input
-						type="text"
-						style="margin: 0 16px;"
-						v-model="search"
-						@input="onSearch">
-				</label>
-			</div>
-			<div class="app__sort app-sort">
-				<label>
-					Sort
-					<select
-						style="margin: 0 16px;"
-						v-model="sort"
-						@change="onSort">
-						<option value="desc">More repos</option>
-						<option value="asc">Less repos</option>
-					</select>
-				</label>
-			</div>
-		</div>
+		<app-nav></app-nav>
 
-		<div class="app__users app-users">
-			<div
-				class="app__user app-user"
-				v-for="user in users"
-				:key="user.id"
-			>
-				<div class="app-user__head">
-					<div class="app-user__avatar">
-						<img :src="user.avatar_url" alt="">
-					</div>
-					<div class="app-user__login">{{user.login}}</div>
-				</div>
-				<div class="app-user__body">
-					<div class="app-user__repos">
-					</div>
-				</div>
-			</div>
-
-		</div>
-
-		<div
-			class="app__pagination app-pagination"
-			v-if="this.users.length"
-		>
-			<button @click="onPrev" :disabled="page <= 1">Prev</button>
-			<button @click="onNext" :disabled="isLastPage">Next</button>
-		</div>
-
+		<router-view></router-view>
 
 	</div>
 </div>
+
 <script src="js/vue.global.prod.js"></script>
+<script src="js/vue-router.global.js"></script>
 <script src="js/lodash.min.js"></script>
 <script src="js/axios.min.js"></script>
 <script src="js/main.js"></script>
+
 </body>
 </html>
