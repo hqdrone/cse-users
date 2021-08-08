@@ -63,8 +63,7 @@ const AppUsers = {
 					<div class="app-user__login">{{user.login}}</div>
 				</div>
 				<div class="app-user__body">
-					<div class="app-user__repos">
-					</div>
+					<router-link :to="{ name: 'user', params: { id: user.id }}">Open</router-link>
 				</div>
 			</div>
 
@@ -128,9 +127,21 @@ const AppUsers = {
 	}
 }
 
+const AppInfo = {
+	template: `
+		<div class="app__info app-info">
+			<div class="app-info__avatar">
+<!--				<img :src="user.avatar" alt="">-->
+			</div>
+			<div class="app-info__login">login</div>
+		</div>
+	`
+}
+
 const routes = [
 	{path: '/', component: AppHome},
-	{path: '/users', component: AppUsers}
+	{path: '/users', component: AppUsers},
+	{path: '/user/:id', name: 'user', component: AppInfo},
 ]
 
 const router = VueRouter.createRouter({
