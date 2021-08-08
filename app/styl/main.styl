@@ -1,9 +1,16 @@
 tr()
 	transition .24s
 
+:root
+	--text-color #F5F7F4
+	--accent-color #F18F01
+	--background-color #222
+	--card-background-color #111
+
 body
 	font-family: 'Rubik', sans-serif;
-	color: #333
+	color: var(--text-color)
+	background: var(--background-color)
 
 .container
 	max-width 960px
@@ -21,33 +28,120 @@ body
 		justify-content: space-between;
 		margin-bottom: 32px
 	
+	&-search
+		input
+			height: 48px
+			padding: 0 24px
+			font-weight: bold;
+			font-family: 'Rubik', sans-serif;
+			border: 1px solid var(--accent-color)
+			border-radius: 8px
+			color: #fff
+			background: transparent;
+			
+			&:focus
+				outline none
+			
+			&:disabled
+				opacity: .64
+	
+	&-sort
+		select
+			border-radius: 8px
+			height: 48px
+			padding: 0 24px
+			font-weight: bold;
+			font-family: 'Rubik', sans-serif;
+			border: 1px solid var(--accent-color)
+			color: #fff
+			background: transparent;
+			
+			&:focus
+				outline none
+			
+			&:disabled
+				opacity: .64
+	
 	&-users
-		display grid
-		gap: 24px
-		grid-template-columns repeat(auto-fill, minmax(280px, 1fr))
-		margin-bottom: 32px
+		&__grid
+			display grid
+			gap: 24px
+			grid-template-columns repeat(auto-fill, minmax(280px, 1fr))
+			margin-bottom: 32px
+		
+		&-pagination
+			display flex
+			justify-content: center;
+			gap: 24px
+			
+			button
+				border-radius: 8px
+				height: 48px
+				padding: 0 24px
+				text-transform: uppercase;
+				font-weight: bold;
+				font-family: 'Rubik', sans-serif;
+				cursor: pointer;
+				border: 1px solid var(--accent-color)
+				color: #fff
+				background: transparent;
+				
+				&:disabled
+					opacity: .64
+	
+	
+	&__user
+		min-width 0
 	
 	&-user
-		background: #eee
+		background: var(--card-background-color)
 		padding: 16px
 		border-radius: 8px
+		display flex
+		align-items: center
+		justify-content space-between
+		gap: 24px
 		
 		&__head
 			display flex
-			gap: 16px
+			gap: 8px
 			align-items: center
+			min-width 0
 		
 		&__avatar
 			width: 32px
 			height: 32px
 			border-radius: 50px
 			overflow hidden
+			flex-shrink 0
 			
 			img
 				object-fit cover
 				width: 100%
 				height: 100%
 				display block
+		
+		&__login
+			display block
+			overflow hidden
+			text-overflow ellipsis
+		
+		&__button
+			text-align right
+			
+			a
+				display inline-grid
+				place-items center
+				border-radius: 8px
+				height: 48px
+				padding: 0 24px
+				text-transform: uppercase;
+				font-weight: bold;
+				font-family: 'Rubik', sans-serif;
+				cursor: pointer;
+				border: 1px solid var(--accent-color)
+				color: #fff
+				text-decoration none
 	
 	&__nav
 		margin-bottom: 32px
@@ -63,6 +157,100 @@ body
 			
 			a
 				text-transform: uppercase;
-				color #333
+				color var(--text-color)
 				font-size: 18px
 				text-decoration none
+				&.router-link-exact-active
+					color var(--accent-color)
+	
+	&-info
+		display flex
+		flex-direction column
+		align-items center
+		gap: 16px
+		
+		&__avatar
+			width: 128px
+			height: 128px
+			overflow hidden
+			border-radius: 50%
+			
+			img
+				display block
+				width: 100%
+				height: 100%
+				object-fit cover
+		
+		&__block
+			background: var(--card-background-color)
+			padding: 16px
+			border-radius: 8px
+			gap: 24px
+			font-weight: bold;
+			a
+				color  var(--accent-color)
+			span
+				font-weight: 300;
+	
+	&-loader
+		display flex
+		padding: 32px
+		justify-content: center;
+	&-home
+		a
+			display inline-grid
+			place-items center
+			border-radius: 8px
+			height: 48px
+			padding: 0 24px
+			text-transform: uppercase;
+			font-weight: bold;
+			text-decoration none
+			font-family: 'Rubik', sans-serif;
+			cursor: pointer;
+			border: 1px solid var(--accent-color)
+			color: #fff
+			background: transparent;
+
+svg {
+	width: 3.75em;
+	transform-origin: center;
+	animation: rotate 2s linear infinite;
+}
+
+circle {
+	fill: none;
+	stroke: var(--accent-color);
+	stroke-width: 2;
+	stroke-dasharray: 1, 200;
+	stroke-dashoffset: 0;
+	stroke-linecap: round;
+	animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes dash {
+	0% {
+		stroke-dasharray: 1, 200;
+		stroke-dashoffset: 0;
+	}
+	50% {
+		stroke-dasharray: 90, 200;
+		stroke-dashoffset: -35px;
+	}
+	100% {
+		stroke-dashoffset: -125px;
+	}
+}
+
+
+@media (max-width: 767.98px)
+	.app-tools
+		flex-direction column
+
+@media (max-width: 575.98px) {  }

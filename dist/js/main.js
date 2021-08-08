@@ -7,10 +7,10 @@ app.component('app-nav', {
 		<div class="app__nav app-nav">
 			<ul>
 				<li>
-					<router-link to="/">Home</router-link>
+					<router-link :active="isExactActive" to="/">Home</router-link>
 				</li>
 				<li>
-					<router-link to="/users">Users</router-link>
+					<router-link :active="isExactActive" to="/users">Users</router-link>
 				<li>
 			</ul>
 		</div>
@@ -19,7 +19,9 @@ app.component('app-nav', {
 
 const AppHome = {
 	template: `
-		<router-link to="/users">Users</router-link>
+		<div class="app__home app-home">
+			<router-link to="/users">Users</router-link>
+		</div>
 	`
 }
 
@@ -50,32 +52,43 @@ const AppUsers = {
 			</div>
 		</div>
 
-		<div class="app__users app-users">
-			<div
-				class="app__user app-user"
-				v-for="user in users"
-				:key="user.id"
-			>
-				<div class="app-user__head">
-					<div class="app-user__avatar">
-						<img :src="user.avatar_url" alt="">
+		<div class="app__users app-users" v-if="!loader">
+			<div class="app-users__grid">
+				<div
+					class="app__user app-user"
+					v-for="user in users"
+					:key="user.id"
+				>
+					<div class="app-user__head">
+						<div class="app-user__avatar">
+							<img :src="user.avatar_url" alt="">
+						</div>
+						<div class="app-user__login">{{user.login}}</div>
 					</div>
-					<div class="app-user__login">{{user.login}}</div>
+					<div class="app-user__body">
+						<div class="app-user__button">
+							<router-link :to="{ name: 'user', params: { id: user.id }}">Open</router-link>
+						</div>
+					</div>
 				</div>
-				<div class="app-user__body">
-					<router-link :to="{ name: 'user', params: { id: user.id }}">Open</router-link>
-				</div>
+			</div>
+			
+			<div
+				class="app-users__pagination app-users-pagination"
+				v-if="this.users.length"
+			>
+				<button @click="onPrev" :disabled="isFirstPage">Prev</button>
+				<button @click="onNext" :disabled="isLastPage">Next</button>
 			</div>
 
 		</div>
-
-		<div
-			class="app__pagination app-pagination"
-			v-if="this.users.length"
-		>
-			<button @click="onPrev" :disabled="isFirstPage">Prev</button>
-			<button @click="onNext" :disabled="isLastPage">Next</button>
+		<div class="app__loader app-loader" v-if="loader">
+			<svg viewBox="25 25 50 50" >
+				<circle cx="50" cy="50" r="20"></circle>
+			</svg>
 		</div>
+
+		
 	`,
 	data() {
 		return {
@@ -84,7 +97,8 @@ const AppUsers = {
 			users: [],
 			page: 1,
 			perPage: 12,
-			usersLength: null
+			usersLength: null,
+			loader: false
 		}
 	},
 	methods: {
@@ -103,13 +117,15 @@ const AppUsers = {
 		onSearch: _.debounce(async function () {
 			this.page = 1
 			await this.getUsers()
-		}, 2000),
+		}, 1000),
 		async getUsers() {
 			if (this.search.length) {
 				try {
+					this.loader = true
 					const {data} = await axios.get(`https://api.github.com/search/users?q=${this.search}+in:login&sort=repositories&order=${this.sort}&per_page=${this.perPage}&page=${this.page}`)
 					this.usersLength = data.total_count
 					this.users = data.items
+					this.loader = false
 				} catch (e) {
 					console.log('too many requests - ' + e.message)
 				}
@@ -130,12 +146,89 @@ const AppUsers = {
 const AppInfo = {
 	template: `
 		<div class="app__info app-info">
-			<div class="app-info__avatar">
-<!--				<img :src="user.avatar" alt="">-->
+			<div class="app-info__avatar" v-if="user.avatar_url">
+				<img :src="user.avatar_url" alt="">
 			</div>
-			<div class="app-info__login">login</div>
+			<div class="app-info__block" v-if="user.login">
+				<span>Login:</span> {{user.login}}
+			</div>
+			<div class="app-info__block" v-if="user.name">
+				<span>Name:</span> {{user.name}}
+			</div>
+			<div class="app-info__block" v-if="user.company">
+				<span>Company:</span> {{user.company}}
+			</div>
+			<div class="app-info__block" v-if="user.bio">
+				<span>Bio:</span> {{user.bio}}
+			</div>
+			<div class="app-info__block" v-if="user.email">
+				<span>Email:</span> {{user.email}}
+			</div>
+			<div class="app-info__block" v-if="user.html_url">
+				<span>Github:</span> <a target="_blank" :href="user.html_url">{{user.html_url}}</a>
+			</div>
+			<div class="app-info__block" v-if="user.blog">
+				<span>Blog:</span> <a target="_blank" :href="user.blog">{{user.blog}}</a>
+			</div>
+			<div class="app-info__block" v-if="user.location">
+				<span>Location:</span> {{user.location}}
+			</div>
+			<div class="app-info__block" v-if="user.public_repos">
+				<span>Public repos:</span> {{user.public_repos}}
+			</div>
+			<div class="app-info__block" v-if="user.public_gists">
+				<span>Public gists:</span> {{user.public_gists}}
+			</div>
+			<div class="app-info__block" v-if="user.followers">
+				<span>Followers:</span> {{user.followers}}
+			</div>
+			<div class="app-info__block" v-if="user.created_at">
+				<span>Create at:</span> {{user.created_at}}
+			</div>
 		</div>
-	`
+	`,
+	data() {
+		return {
+			user: {
+				login: null,
+				avatar_url: null,
+				html_url: null,
+				name: null,
+				company: null,
+				blog: null,
+				location: null,
+				email: null,
+				bio: null,
+				public_repos: null,
+				public_gists: null,
+				followers: null,
+				created_at: null
+			}
+		}
+	},
+	methods: {
+		async getUser() {
+			const {data} = await axios.get(`https://api.github.com/user/${this.$route.params.id}`)
+			this.user = {
+				login: data.login,
+				avatar_url: data.avatar_url,
+				html_url: data.html_url,
+				name: data.name,
+				company: data.company,
+				blog: data.blog,
+				location: data.location,
+				email: data.email,
+				bio: data.bio,
+				public_repos: data.public_repos,
+				public_gists: data.public_gists,
+				followers: data.followers,
+				created_at: data.created_at
+			}
+		}
+	},
+	async mounted() {
+		await this.getUser()
+	}
 }
 
 const routes = [
