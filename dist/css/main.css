@@ -1,6 +1,7 @@
 :root {
   --text-color: #f5f7f4;
   --accent-color: #f18f01;
+  --accent-color-opacity: rgba(241,143,1,0.12);
   --background-color: #222;
   --card-background-color: #111;
 }
@@ -18,6 +19,9 @@ body {
   font-size: 48px;
   text-align: center;
 }
+.app-h1 span {
+  color: var(--accent-color);
+}
 .app-tools {
   display: flex;
   gap: 32px;
@@ -33,9 +37,11 @@ body {
   border-radius: 8px;
   color: #fff;
   background: transparent;
+  transition: 0.24s;
 }
 .app-search input:focus {
   outline: none;
+  background: var(--accent-color-opacity);
 }
 .app-search input:disabled {
   opacity: 0.64;
@@ -49,6 +55,7 @@ body {
   border: 1px solid var(--accent-color);
   color: #fff;
   background: transparent;
+  transition: 0.24s;
 }
 .app-sort select:focus {
   outline: none;
@@ -60,6 +67,9 @@ body {
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  margin-bottom: 32px;
+}
+.app-users__pagination {
   margin-bottom: 32px;
 }
 .app-users-pagination {
@@ -78,6 +88,10 @@ body {
   border: 1px solid var(--accent-color);
   color: #fff;
   background: transparent;
+  transition: 0.24s;
+}
+.app-users-pagination button:not(:disabled):hover {
+  background: var(--accent-color-opacity);
 }
 .app-users-pagination button:disabled {
   opacity: 0.64;
@@ -152,6 +166,7 @@ body {
   color: var(--text-color);
   font-size: 18px;
   text-decoration: none;
+  transition: 0.24s;
 }
 .app-nav ul a.router-link-exact-active {
   color: var(--accent-color);
@@ -207,6 +222,10 @@ body {
   border: 1px solid var(--accent-color);
   color: #fff;
   background: transparent;
+  transition: 0.24s;
+}
+.app-home a:hover {
+  background: var(--accent-color-opacity);
 }
 svg {
   width: 3.75em;

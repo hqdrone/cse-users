@@ -10,7 +10,7 @@ app.component('app-nav', {
 					<router-link :active="isExactActive" to="/">Home</router-link>
 				</li>
 				<li>
-					<router-link :active="isExactActive" to="/users">Users</router-link>
+					<router-link :active="isExactActive" to="/users">Search Users</router-link>
 				<li>
 			</ul>
 		</div>
@@ -20,7 +20,7 @@ app.component('app-nav', {
 const AppHome = {
 	template: `
 		<div class="app__home app-home">
-			<router-link to="/users">Users</router-link>
+			<router-link to="/users">Search Users</router-link>
 		</div>
 	`
 }
@@ -37,6 +37,7 @@ const AppUsers = {
 						v-model="search"
 						@input="onSearch">
 				</label>
+				<span v-if="users.length">Total: {{this.usersLength}}</span>
 			</div>
 			<div class="app__sort app-sort">
 				<label>
@@ -52,8 +53,20 @@ const AppUsers = {
 			</div>
 		</div>
 
-		<div class="app__users app-users" v-if="!loader">
-			<div class="app-users__grid">
+		<div class="app-users__empty" v-if="!users.length">
+			<p>start search or modify query...</p>
+		</div>
+
+		<div class="app__users app-users">
+			<div
+				class="app-users__pagination app-users-pagination"
+				v-if="this.users.length"
+			>
+				<button @click="onPrev" :disabled="isFirstPage">Prev</button>
+				<button @click="onNext" :disabled="isLastPage">Next</button>
+			</div>
+			
+			<div class="app-users__grid" v-if="!loader">
 				<div
 					class="app__user app-user"
 					v-for="user in users"
@@ -71,14 +84,6 @@ const AppUsers = {
 						</div>
 					</div>
 				</div>
-			</div>
-			
-			<div
-				class="app-users__pagination app-users-pagination"
-				v-if="this.users.length"
-			>
-				<button @click="onPrev" :disabled="isFirstPage">Prev</button>
-				<button @click="onNext" :disabled="isLastPage">Next</button>
 			</div>
 
 		</div>
@@ -129,7 +134,8 @@ const AppUsers = {
 				} catch (e) {
 					console.log('too many requests - ' + e.message)
 				}
-				
+			} else {
+				this.users = []
 			}
 		}
 	},
@@ -188,6 +194,36 @@ const AppInfo = {
 		</div>
 	`,
 	data() {
+		return {}
+	},
+	methods: {
+		async fetchUser() {
+			this.$store.dispatch('fetchUser', `https://api.github.com/user/${this.$route.params.id}`)
+		}
+	},
+	computed: {
+		user() {
+			return this.$store.getters.getUser
+		}
+	},
+	async mounted() {
+		await this.fetchUser()
+	}
+}
+
+const routes = [
+	{path: '/', component: AppHome},
+	{path: '/users', component: AppUsers},
+	{path: '/user/:id', name: 'user', component: AppInfo},
+]
+
+const router = VueRouter.createRouter({
+	history: VueRouter.createWebHashHistory(),
+	routes
+})
+
+const store = Vuex.createStore({
+	state() {
 		return {
 			user: {
 				login: null,
@@ -206,41 +242,39 @@ const AppInfo = {
 			}
 		}
 	},
-	methods: {
-		async getUser() {
-			const {data} = await axios.get(`https://api.github.com/user/${this.$route.params.id}`)
-			this.user = {
-				login: data.login,
-				avatar_url: data.avatar_url,
-				html_url: data.html_url,
-				name: data.name,
-				company: data.company,
-				blog: data.blog,
-				location: data.location,
-				email: data.email,
-				bio: data.bio,
-				public_repos: data.public_repos,
-				public_gists: data.public_gists,
-				followers: data.followers,
-				created_at: data.created_at
+	mutations: {
+		setUser(state, payload) {
+			state.user = {
+				login: payload.login,
+				avatar_url: payload.avatar_url,
+				html_url: payload.html_url,
+				name: payload.name,
+				company: payload.company,
+				blog: payload.blog,
+				location: payload.location,
+				email: payload.email,
+				bio: payload.bio,
+				public_repos: payload.public_repos,
+				public_gists: payload.public_gists,
+				followers: payload.followers,
+				created_at: payload.created_at
 			}
 		}
 	},
-	async mounted() {
-		await this.getUser()
+	actions: {
+		async fetchUser({commit}, payload) {
+			const {data} = await axios.get(payload)
+			commit('setUser', data)
+		}
+	},
+	getters: {
+		getUser(state) {
+			return state.user
+		}
 	}
-}
-
-const routes = [
-	{path: '/', component: AppHome},
-	{path: '/users', component: AppUsers},
-	{path: '/user/:id', name: 'user', component: AppInfo},
-]
-
-const router = VueRouter.createRouter({
-	history: VueRouter.createWebHashHistory(),
-	routes
 })
 
 app.use(router)
+app.use(store)
+
 app.mount('#app')
