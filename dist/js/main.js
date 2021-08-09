@@ -56,6 +56,10 @@ const AppUsers = {
 		<div class="app-users__empty" v-if="!users.length">
 			<p>start search or modify query...</p>
 		</div>
+		
+		<div class="app-users__error" v-if="error">
+			<p>too many requests... please wait and try again</p>
+		</div>
 
 		<div class="app__users app-users">
 			<div
@@ -92,8 +96,6 @@ const AppUsers = {
 				<circle cx="50" cy="50" r="20"></circle>
 			</svg>
 		</div>
-
-		
 	`,
 	data() {
 		return {
@@ -103,7 +105,8 @@ const AppUsers = {
 			page: 1,
 			perPage: 12,
 			usersLength: null,
-			loader: false
+			loader: false,
+			error: false
 		}
 	},
 	methods: {
@@ -121,6 +124,7 @@ const AppUsers = {
 		},
 		onSearch: _.debounce(async function () {
 			this.page = 1
+			this.error = false
 			await this.getUsers()
 		}, 1000),
 		async getUsers() {
@@ -132,7 +136,9 @@ const AppUsers = {
 					this.users = data.items
 					this.loader = false
 				} catch (e) {
-					console.log('too many requests - ' + e.message)
+					this.error = true
+					this.users = []
+					this.loader = false
 				}
 			} else {
 				this.users = []
